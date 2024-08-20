@@ -1,4 +1,3 @@
-# ベースイメージとして公式のPHP 8.xとApacheを使用
 FROM php:8.2-fpm
 
 # 必要なパッケージをインストール
@@ -11,7 +10,7 @@ RUN apt-get update && apt-get install -y \
     git \
     curl \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install gd pdo pdo_mysql
+    && docker-php-ext-install gd
 
 # Composerをインストール
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
@@ -19,12 +18,7 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # 作業ディレクトリを設定
 WORKDIR /var/www
 
-# Laravelのインストール
-RUN composer create-project --prefer-dist laravel/laravel .
-
-# 権限の設定
-RUN chown -R www-data:www-data /var/www \
-    && chmod -R 755 /var/www/storage
-
-EXPOSE 9000
-CMD ["php-fpm"]
+# Laravelプロジェクトを作成し、一時ディレクトリに保存
+RUN composer create-project --prefer-dist laravel/laravel /tmp/laravel-project \
+    && cp -r /tmp/laravel-project/* /var/www \
+    && rm -rf /tmp/laravel-project

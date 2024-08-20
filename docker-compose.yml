@@ -1,34 +1,29 @@
-version: '3.8'
-
 services:
-  # PHPとLaravelのサービス
   app:
     build:
       context: .
     container_name: laravel-app
-    working_dir: /var/www
+    working_dir: /var/www  # 正しいディレクトリに設定
     volumes:
-      - .:/var/www
+      - ./my-laravel-app:/var/www  # プロジェクトのルートディレクトリをマウント
     networks:
       - app-network
     depends_on:
       - mariadb
 
-  # Nginxのサービス
   webserver:
     image: nginx:alpine
     container_name: nginx-webserver
     volumes:
-      - .:/var/www
+      - ./my-laravel-app:/var/www  # プロジェクトのルートディレクトリをマウント
       - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
     ports:
-      - "8080:80"
+      - "8080:80"  # ここでホストの8080ポートをコンテナの80ポートにマッピング
     networks:
       - app-network
     depends_on:
       - app
 
-  # MariaDBのサービス
   mariadb:
     image: mariadb:10.5
     container_name: mariadb
