@@ -1,3 +1,5 @@
+version: '3.8'
+
 services:
   app:
     build:
@@ -34,6 +36,8 @@ services:
       MYSQL_DATABASE: laravel
       MYSQL_USER: laraveluser
       MYSQL_PASSWORD: secret
+    ports:
+      - "3306:3306" 
     volumes:
       - mariadb-data:/var/lib/mysql
     networks:

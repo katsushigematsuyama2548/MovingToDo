@@ -16,7 +16,4 @@
     <body>
         <h1 class="text-3xl font-bold text-red-500">Hello World</h1>
     </body>
-
-
-
 </html>
