@@ -14,6 +14,9 @@
         @vite('resources/css/app.css')
     </head>
     <body>
-        <h1 class="text-3xl font-bold text-red-500">Hello World</h1>
+        <h1 class="text-3xl font-bold text-red-500 underline">Hello World</h1>
+            <div class="bg-gray-100 line-through">
+                <p class="text-3xl font-bold text-red-500 line-through">Hello World</p>
+            </div>  
     </body>
 </html>
