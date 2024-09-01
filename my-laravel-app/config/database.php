@@ -41,6 +41,12 @@ return [
             'journal_mode' => null,
             'synchronous' => null,
         ],
+        
+        'sqlite_testing' => [
+            'driver' => 'sqlite',
+            'database' => ':memory:',
+            'prefix' => '',
+        ],
 
         'mysql' => [
             'driver' => 'mysql',

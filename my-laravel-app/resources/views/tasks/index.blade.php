@@ -1,26 +1,19 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>ToDo App</title>
-    @vite('resources/css/app.css')
-</head>
-<body class="bg-gray-100">
-<header>
-    <nav class="my-navbar flex items-center justify-between bg-gray-800 h-24 mb-12 p-0 px-8">
-        <a class="my-navbar-brand text-lg text-gray-400 hover:text-white" href="/">ToDo App</a>
-    </nav>
-</header>
-<main>
+@extends('layout')
+@section('styles')
+    <!-- 「flatpickr」の デフォルトスタイルシートをインポート -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <!-- 「flatpickr」の ブルーテーマの追加スタイルシートをインポート -->
+    <link rel="stylesheet" href="https://npmcdn.com/flatpickr/dist/themes/material_blue.css">
+@endsection
+
+@section('content')
     <div class="container mx-auto">
         <div class="flex">
             <div class="w-full md:w-1/3">
                 <nav class="panel panel-default bg-white shadow rounded-lg">
                     <div class="panel-heading bg-gray-200 p-4 rounded-t-lg">フォルダ</div>
                     <div class="flex justify-center panel-body p-4">
-                        <a href="#" class="btn btn-default btn-block text-gray-500 border border-gray-500 hover:bg-gray-400 text-black rounded py-2 px-9">
+                        <a href="{{route('folders.create')}}" class="btn btn-default btn-block flex justify-center text-gray-500 border border-gray-500 hover:bg-gray-400 text-black rounded py-2 w-full">
                             フォルダを追加する
                         </a>
                     </div>
@@ -29,24 +22,68 @@
                             @foreach($folders as $folder)
                             <tr class="border-t">
                                 <td class="text-left align-middle p-4 hover:text-blue-700 hover:bg-blue-100">
-                                    <a href="{{ route('tasks.index', ['id' => $folder->id]) }}" class="list-group-item {{ $folder_id === $folder->id ? 'active' : '' }}">
+                                    <a href="{{ route('tasks.index', ['id' => $folder->id]) }}" class="list-group-item block w-full h-full {{ $folder_id === $folder->id ? 'active' : '' }}">
                                         {{ $folder->title }}
                                     </a>
                                 </td>
-                                <td class="align-middle p-4"><a href="#" class="text-blue-500 hover:text-blue-700">編集</a></td>
-                                <td class="align-middle p-4"><a href="#" class="text-blue-500 hover:text-blue-700">削除</a></td>
+                                <td class="align-middle p-4"><a href="{{ route('folders.edit', ['id' => $folder->id]) }}" class="text-blue-500 hover:text-blue-700">編集</a></td>                               
+                                <td class="align-middle p-4"><a href="{{ route('folders.delete', ['id' => $folder->id]) }}" class="text-blue-500 hover:text-blue-700">削除</a></td>
                             </tr>
                             @endforeach
                         </table>
                     </div>
                 </nav>
             </div>
-            <div class="w-full md:w-2/3">
+            <div class="w-full md:w-2/3 pl-8">
                 <!-- ここにタスクが表示される -->
+                <div class="bg-white">
+                    <div class="panel-heading bg-gray-200 p-4 rounded-t-lg">タスク</div>
+                    <div>
+                        <div class="flex justify-center panel-body p-4">
+                            <a href="{{ route('tasks.create', ['id' => $folder_id]) }}" class="btn btn-default btn-block  flex justify-center text-gray-500 border border-gray-500 hover:bg-gray-400 text-black rounded py-2 w-full">
+                                タスクを追加する
+                            </a>
+                        </div>
+                    </div>
+                    <table class="w-full bg-white border rounded-md">
+                        <thead>
+                            <tr class="">
+                                <th class="text-left p-2">タイトル</th>
+                                <th class="text-left p-2">状態</th>
+                                <th class="text-left p-2">期限</th>
+                                <th class="text-left p-2"></th>
+                                <th class="text-left p-2"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!--
+                            * 【task一覧セクション】
+                            * foreach の中でTaskControllerから渡されたデータ $tasks を参照する
+                            * $tasks をループして値をて表示する
+                            -->
+                            @foreach($tasks as $task)
+                                <tr class="border-t">
+                                    <!-- タスクのタイトルを表示する -->
+                                    <td class="p-2">{{ $task->title }}</td>
+                                    <!-- タスクの状態を表示する -->
+                                    <td class="p-2">
+                                        <span class="rounded-md {{ $task->status_class }} px-1 py-0.5 text-white font-medium">{{ $task->status_label }}</span>
+                                    </td>
+                                    <!-- タスクの期限を表示する -->
+                                    <td class="p-2 whitespace-nowrap">{{ $task->formatted_due_date }}</td>
+                                    <!-- 編集と削除のリンクを表示する -->
+                                    <td class="p-2 text-blue-500 hover:text-blue-700"><a href="{{ route('tasks.edit', ['id' => $task->folder_id, 'task_id' => $task->id]) }}">編集</a></td>
+                                    <td class="p-2 text-blue-500 hover:text-blue-700">
+                                        <a href="{{ route('tasks.delete', ['id' => $task->folder_id, 'task_id' => $task->id]) }}">削除</a>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
-</main>
+@endsection
 </body>
-@vite('resources/js/app.js')
 </html>
