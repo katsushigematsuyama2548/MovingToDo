@@ -18,7 +18,7 @@
                             </ul>
                         </div>
                         @endif
-                        <form action="{{ route('tasks.delete', ['id' => $task->folder_id, 'task_id' => $task->id]) }}" method="POST">
+                        <form action="{{ route('tasks.delete', ['folder' => $task->folder_id, 'task' => $task->id]) }}" method="POST">
                             @csrf
                             <div class="form-group">
                                 <label for="title" class="font-bold">タイトル</label>
@@ -42,7 +42,7 @@
                             </div>
                             <p>上記の項目を削除しようとしています。本当によろしいでしょうか？</p>
                             <div class="text-right">
-                                <button type="button" class="text-white bg-sky-400 hover:bg-sky-700 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mt-4 dark:bg-blue-600 focus:outline-none" onclick="window.location='{{ route('tasks.index', ['id' => $task->folder_id]) }}'">キャンセル</button>
+                                <button type="button" class="text-white bg-sky-400 hover:bg-sky-700 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mt-4 dark:bg-blue-600 focus:outline-none" onclick="window.location='{{ route('tasks.index', ['folder' => $task->folder_id]) }}'">キャンセル</button>
                                 <button type="submit" class="text-white bg-sky-400 hover:bg-sky-700 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mt-4 dark:bg-blue-600 focus:outline-none">削除</button>
                             </div>
                         </form>

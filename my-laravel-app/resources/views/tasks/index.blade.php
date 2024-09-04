@@ -21,15 +21,15 @@
                         <table class="table-auto w-full text-center">
 
                             @foreach($folders as $folder)
-                                @if($folder->user_id === Auth::user()->id)
-                                    <tr class="border-t">
-                                        <td class="text-left align-middle p-4 hover:text-blue-700 hover:bg-blue-100">
-                                            <a href="{{ route('tasks.index', ['id' => $folder->id]) }}" class="list-group-item block w-full h-full {{ $folder_id === $folder->id ? 'active' : '' }}">
+                            @if($folder->user_id === Auth::user()->id)
+                                    <tr class="border-t border-gray-200">
+                                        <td class="pt-3 pb-3 text-left pl-5">
+                                            <a href="{{ route('tasks.index', ['folder' => $folder->id]) }}" class="list-group-item {{ $folder_id === $folder->id ? 'active' : '' }}">
                                                 {{ $folder->title }}
-                                            </a>
+                                        </a>
                                         </td>
-                                        <td class="align-middle p-4"><a href="{{ route('folders.edit', ['id' => $folder->id]) }}" class="text-blue-500 hover:text-blue-700">編集</a></td>                               
-                                        <td class="align-middle p-4"><a href="{{ route('folders.delete', ['id' => $folder->id]) }}" class="text-blue-500 hover:text-blue-700">削除</a></td>
+                                        <td class="text-right pl-20"><a href="{{ route('folders.edit', ['folder' => $folder->id]) }}" class="text-blue-500 hover:text-blue-700 justify-end flex items-end">編集</a></td>
+                                        <td class="text-right pr-5"><a href="{{ route('folders.delete', ['folder' => $folder->id]) }}" class="text-blue-500 hover:text-blue-700">削除</a></td>
                                     </tr>
                                 @endif
                             @endforeach
@@ -44,7 +44,7 @@
                     <div class="panel-heading bg-gray-200 p-4 rounded-t-lg">タスク</div>
                     <div>
                         <div class="flex justify-center panel-body p-4">
-                            <a href="{{ route('tasks.create', ['id' => $folder_id]) }}" class="btn btn-default btn-block  flex justify-center text-gray-500 border border-gray-500 hover:bg-gray-400 text-black rounded py-2 w-full">
+                            <a href="{{ route('tasks.create', ['folder' => $folder_id]) }}" class="btn btn-default btn-block  flex justify-center text-gray-500 border border-gray-500 hover:bg-gray-400 text-black rounded py-2 w-full">
                                 タスクを追加する
                             </a>
                         </div>
@@ -76,9 +76,9 @@
                                     <!-- タスクの期限を表示する -->
                                     <td class="p-2 whitespace-nowrap">{{ $task->formatted_due_date }}</td>
                                     <!-- 編集と削除のリンクを表示する -->
-                                    <td class="p-2 text-blue-500 hover:text-blue-700"><a href="{{ route('tasks.edit', ['id' => $task->folder_id, 'task_id' => $task->id]) }}">編集</a></td>
+                                    <td class="p-2 text-blue-500 hover:text-blue-700"><a href="{{ route('tasks.edit', ['folder' => $task->folder_id, 'task' => $task->id]) }}">編集</a></td>
                                     <td class="p-2 text-blue-500 hover:text-blue-700">
-                                        <a href="{{ route('tasks.delete', ['id' => $task->folder_id, 'task_id' => $task->id]) }}">削除</a>
+                                        <a href="{{ route('tasks.delete', ['folder' => $task->folder_id, 'task' => $task->id]) }}">削除</a>
                                     </td>
                                 </tr>
                             @endforeach

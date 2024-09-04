@@ -15,7 +15,7 @@
                         </ul>
                     </div>
                 @endif
-                <form action="{{ route('folders.delete', ['id' => $folder_id]) }}" method="post">
+                <form action="{{ route('folders.delete', ['folder' => $folder_id]) }}" method="post">
                     @csrf
                     <div class="form-group">
                         <label for="title">フォルダ名</label>
@@ -23,7 +23,7 @@
                     </div>
                     <p class="mt-2">上記の項目を削除しようとしています。本当によろしいでしょうか？</p>
                     <div class="text-right">
-                        <button type="button" class="text-white bg-sky-400 hover:bg-sky-700 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mt-4 dark:bg-blue-600 focus:outline-none" onclick="window.location='{{ route('tasks.index', ['id' => $folder_id]) }}'">キャンセル</button>
+                        <button type="button" class="text-white bg-sky-400 hover:bg-sky-700 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mt-4 dark:bg-blue-600 focus:outline-none" onclick="window.location='{{ route('tasks.index', ['folder' => $folder_id]) }}'">キャンセル</button>
                         <button type="submit" class="text-white bg-sky-400 hover:bg-sky-700 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mt-4 dark:bg-blue-600 focus:outline-none">削除</button>
                     </div>
                 </form>
