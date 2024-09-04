@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request; // 追加
 use Illuminate\Support\Facades\Auth; // 追加
+use Illuminate\Support\Facades\Route;
+use App\Providers\RouteServiceProvider;
 
 
 class LoginController extends Controller
@@ -22,6 +24,7 @@ class LoginController extends Controller
     */
 
     use AuthenticatesUsers;
+    protected $redirectTo = RouteServiceProvider::HOME;
 
     /**
      * Where to redirect users after login.

@@ -1,46 +1,42 @@
-@extends('layouts.app')
+@extends('layout')
+
+@section('styles')
+<!-- Tailwind CSSのスタイルはすでに読み込まれている前提 -->
+@endsection
 
 @section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">{{ __('Reset Password') }}</div>
-
-                <div class="card-body">
+<div class="mx-auto">
+    <div class="md:w-2/5 mx-auto">
+        <div class="col col-md-offset-3 col-md-6">
+            <nav class="panel panel-default bg-white shadow rounded-lg">
+                <div class="panel-heading bg-gray-200 p-4 rounded-t-lg">パスワード再発行</div>
+                <div class="panel-body p-4">
                     @if (session('status'))
                         <div class="alert alert-success" role="alert">
                             {{ session('status') }}
                         </div>
                     @endif
-
-                    <form method="POST" action="{{ route('password.email') }}">
-                        @csrf
-
-                        <div class="row mb-3">
-                            <label for="email" class="col-md-4 col-form-label text-md-end">{{ __('Email Address') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
-
-                                @error('email')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
+                    @if($errors->any())
+                        <div class="alert alert-danger">
+                        <ul>
+                            @foreach($errors->all() as $message)
+                                <li>{{ $message }}</li>
+                            @endforeach
+                        </ul>
                         </div>
-
-                        <div class="row mb-0">
-                            <div class="col-md-6 offset-md-4">
-                                <button type="submit" class="btn btn-primary">
-                                    {{ __('Send Password Reset Link') }}
-                                </button>
-                            </div>
+                    @endif
+                    <form action="{{ route('password.email') }}" method="POST">
+                        @csrf
+                        <div class="form-group mb-4">
+                            <label for="email" class="block text-gray-700">メールアドレス</label>
+                            <input type="text" class="form-control w-full p-2 border border-gray-300 rounded" id="email" name="email" />
+                        </div>
+                        <div class="text-right">
+                            <button type="submit" class="btn btn-primary bg-blue-500 text-white py-2 px-4 rounded">再発行リンクを送る</button>
                         </div>
                     </form>
                 </div>
-            </div>
+            </nav>
         </div>
     </div>
 </div>

@@ -19,17 +19,21 @@
                     </div>
                     <div class="list-group">
                         <table class="table-auto w-full text-center">
+
                             @foreach($folders as $folder)
-                            <tr class="border-t">
-                                <td class="text-left align-middle p-4 hover:text-blue-700 hover:bg-blue-100">
-                                    <a href="{{ route('tasks.index', ['id' => $folder->id]) }}" class="list-group-item block w-full h-full {{ $folder_id === $folder->id ? 'active' : '' }}">
-                                        {{ $folder->title }}
-                                    </a>
-                                </td>
-                                <td class="align-middle p-4"><a href="{{ route('folders.edit', ['id' => $folder->id]) }}" class="text-blue-500 hover:text-blue-700">編集</a></td>                               
-                                <td class="align-middle p-4"><a href="{{ route('folders.delete', ['id' => $folder->id]) }}" class="text-blue-500 hover:text-blue-700">削除</a></td>
-                            </tr>
+                                @if($folder->user_id === Auth::user()->id)
+                                    <tr class="border-t">
+                                        <td class="text-left align-middle p-4 hover:text-blue-700 hover:bg-blue-100">
+                                            <a href="{{ route('tasks.index', ['id' => $folder->id]) }}" class="list-group-item block w-full h-full {{ $folder_id === $folder->id ? 'active' : '' }}">
+                                                {{ $folder->title }}
+                                            </a>
+                                        </td>
+                                        <td class="align-middle p-4"><a href="{{ route('folders.edit', ['id' => $folder->id]) }}" class="text-blue-500 hover:text-blue-700">編集</a></td>                               
+                                        <td class="align-middle p-4"><a href="{{ route('folders.delete', ['id' => $folder->id]) }}" class="text-blue-500 hover:text-blue-700">削除</a></td>
+                                    </tr>
+                                @endif
                             @endforeach
+
                         </table>
                     </div>
                 </nav>
