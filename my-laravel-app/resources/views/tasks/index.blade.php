@@ -19,7 +19,6 @@
                     </div>
                     <div class="list-group">
                         <table class="table-auto w-full text-center">
-
                             @foreach($folders as $folder)
                             @if($folder->user_id === Auth::user()->id)
                                     <tr class="border-t border-gray-200">
@@ -33,7 +32,6 @@
                                     </tr>
                                 @endif
                             @endforeach
-
                         </table>
                     </div>
                 </nav>
@@ -69,12 +67,22 @@
                                 <tr class="border-t">
                                     <!-- タスクのタイトルを表示する -->
                                     <td class="p-2">{{ $task->title }}</td>
+
+
                                     <!-- タスクの状態を表示する -->
                                     <td class="p-2">
-                                        <span class="rounded-md {{ $task->status_class }} px-1 py-0.5 text-white font-medium">{{ $task->status_label }}</span>
+                                        <select class="status-select custom-status-select rounded-md {{ $task->status_class }} px-1 py-0.5 text-white font-medium" data-task-id="{{ $task->id }}">
+                                            @foreach(\App\Models\Task::STATUS as $key => $val)
+                                                <option value="{{ $key }}" {{ $key == $task->status ? 'selected' : '' }}>
+                                                    {{ $val['label'] }}
+                                                </option>                                            
+                                            @endforeach
+                                        </select>
                                     </td>
                                     <!-- タスクの期限を表示する -->
-                                    <td class="p-2 whitespace-nowrap">{{ $task->formatted_due_date }}</td>
+                                    <td class="p-2 whitespace-nowrap">
+                                        <input type="text" class="due-date-input" data-task-id="{{ $task->id }}" value="{{ $task->formatted_due_date }}" id = "due_date">
+                                    </td>
                                     <!-- 編集と削除のリンクを表示する -->
                                     <td class="p-2 text-blue-500 hover:text-blue-700"><a href="{{ route('tasks.edit', ['folder' => $task->folder_id, 'task' => $task->id]) }}">編集</a></td>
                                     <td class="p-2 text-blue-500 hover:text-blue-700">
@@ -89,5 +97,67 @@
         </div>
     </div>
 @endsection
-</body>
-</html>
+@section('scripts')
+    @include('share.flatpickr.scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            console.log('DOMContentLoaded event fired'); // デバッグ用ログ
+
+            const statusSelects = document.querySelectorAll('.custom-status-select');
+            const dueDateInputs = document.querySelectorAll('.due-date-input'); // クラスセレクタに変更
+
+            statusSelects.forEach(select => {
+                select.addEventListener('change', function () {
+                    const taskId = this.dataset.taskId;
+                    const status = this.value;
+
+                    fetch(`/tasks/${taskId}/update-status`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        body: JSON.stringify({ status })
+                    }).then(response => response.json())
+                      .then(data => {
+                          if (data.success) {
+                              alert('状態が更新されました');
+                          } else {
+                              alert('更新に失敗しました');
+                          }
+                      });
+                });
+            });
+
+            dueDateInputs.forEach(input => {
+                const taskId = input.dataset.taskId;
+                const uniqueId = `due_date_${taskId}`; // 一意のIDを生成
+                input.id = uniqueId; // IDを設定
+
+                console.log('Initializing flatpickr for:', input); // デバッグ用ログ
+                flatpickr(input, { // クラスセレクタに変更
+                    locale: 'ja',
+                    dateFormat: "Y/m/d",
+                    minDate: new Date(),
+                    onChange: function(selectedDates, dateStr, instance) {
+                        fetch(`/tasks/${taskId}/update-due-date`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                            },
+                            body: JSON.stringify({ due_date: dateStr })
+                        }).then(response => response.json())
+                          .then(data => {
+                              if (data.success) {
+                                  alert('期限が更新されました');
+                              } else {
+                                  alert('更新に失敗しました');
+                              }
+                          });
+                    }
+                });
+            });
+        });
+    </script>
+@endsection

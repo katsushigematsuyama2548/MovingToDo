@@ -29,6 +29,7 @@ class TaskController extends Controller
     
         return view('tasks/index', [
             'folders' => $folders,
+            'folder' => $folder,
             'folder_id' => $folder->id,
             'tasks' => $tasks
         ]);
@@ -36,12 +37,12 @@ class TaskController extends Controller
 
     public function showCreateForm(Folder $folder)
     {
-        $this->checkRelation($folder, $task);
         /** @var App\Models\User **/
         $user = Auth::user();
         $folder = $user->folders()->findOrFail($folder->id);
     
         return view('tasks/create', [
+            'folder' => $folder,
             'folder_id' => $folder->id,
         ]);
     }
@@ -70,6 +71,7 @@ class TaskController extends Controller
         $task->find($task->id);
     
         return view('tasks/edit', [
+            'folder' => $folder,
             'task' => $task,
         ]);
     }
@@ -101,6 +103,7 @@ class TaskController extends Controller
         $task = $folder->tasks()->findOrFail($task->id);
     
         return view('tasks/delete', [
+            'folder' => $folder,
             'task' => $task,
         ]);
     }
@@ -125,5 +128,21 @@ class TaskController extends Controller
         if ($folder->id !== $task->folder_id) {
             abort(404);
         }
+    }
+
+    public function updateStatus(Task $task, Request $request)
+    {
+        $task->status = $request->status;
+        $task->save();
+
+        return response()->json(['success' => true]);
+    }
+
+    public function updateDueDate(Task $task, Request $request)
+    {
+        $task->due_date = $request->due_date;
+        $task->save();
+        
+        return response()->json(['success' => true]);
     }
 }

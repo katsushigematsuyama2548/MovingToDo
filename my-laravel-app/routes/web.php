@@ -34,6 +34,9 @@ Route::group(['middleware' => 'auth'], function() {
 
     Route::get('/folders/{folder}/tasks/{task}/delete', [TaskController::class,"showDeleteForm"])->name('tasks.delete');
     Route::post('/folders/{folder}/tasks/{task}/delete', [TaskController::class,"delete"]);
+
+    Route::post('/tasks/{task}/update-status', [TaskController::class, 'updateStatus']);
+    Route::post('/tasks/{task}/update-due-date', [TaskController::class, 'updateDueDate']);
 });
 
 Auth::routes(); 
