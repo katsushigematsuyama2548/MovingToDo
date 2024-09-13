@@ -126,8 +126,11 @@ class TaskController extends Controller
     {
         $task->status = $request->status;
         $task->save();
-
-        return response()->json(['success' => true]);
+    
+        return response()->json([
+            'success' => true,
+            'status_class' => $task->status_class, 
+        ]);
     }
 
     public function updateDueDate(Task $task, Request $request)

@@ -8,10 +8,9 @@ use Illuminate\Support\Facades\Auth;
 
 
 Route::get("/folders/{folder}/tasks", [TaskController::class,"index"])->name("tasks.index");
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::group(['middleware' => 'auth'], function() {
-    
-    Route::get('/', [HomeController::class, 'index'])->name('home');
 
     Route::group(['middleware' => 'can:view,folder'], function() {
         

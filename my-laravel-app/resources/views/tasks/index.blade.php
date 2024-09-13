@@ -129,15 +129,38 @@
 @section('scripts')
     @include('share.flatpickr.scripts')
     <script>
-       document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function () {
             console.log('DOMContentLoaded event fired'); // デバッグ用ログ
-        });
 
+            const statusSelects = document.querySelectorAll('.custom-status-select');
+
+            statusSelects.forEach(select => {
+                select.addEventListener('change', function () {
+                    const status = this.value;
+
+                    // 状態に応じてCSSクラスを変更
+                    switch (status) {
+                        case '1':
+                            this.className = 'status-select custom-status-select rounded-md bg-red-500 px-1 py-0.5 text-white font-medium';
+                            break;
+                        case '2':
+                            this.className = 'status-select custom-status-select rounded-md bg-green-500 px-1 py-0.5 text-white font-medium';
+                            break;
+                        case '3':
+                            this.className = 'status-select custom-status-select rounded-md bg-gray-500 px-1 py-0.5 text-white font-medium';
+                            break;
+                        default:
+                            this.className = 'status-select custom-status-select rounded-md bg-gray-500 px-1 py-0.5 text-white font-medium';
+                            break;
+                    }
+                });
+            });
+        });
         // 認証されていないユーザーにポップアップを表示する関数
         function showPopup(action) {
             alert(action + 'は新規登録後に実行できるようになります。');
         }
-        // ポップアップを表示する関数
+
         document.addEventListener('DOMContentLoaded', function () {
             console.log('DOMContentLoaded event fired'); // デバッグ用ログ
 
@@ -160,6 +183,8 @@
                       .then(data => {
                           if (data.success) {
                               alert('状態が更新されました');
+                              // CSSクラスを更新
+                              this.className = `status-select custom-status-select rounded-md ${data.status_class} px-1 py-0.5 text-white font-medium`;
                           } else {
                               alert('更新に失敗しました');
                           }
