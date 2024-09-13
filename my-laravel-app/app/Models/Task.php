@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
+
 class Task extends Model
 {
     use HasFactory;
@@ -52,5 +53,13 @@ class Task extends Model
     {
         return Carbon::createFromFormat('Y-m-d', $this->attributes['due_date'])
         ->format('Y/m/d');
+    }
+
+    /**
+     * フォルダーとのリレーション
+     */
+    public function folder()
+    {
+        return $this->belongsTo('App\Models\Folder');
     }
 }

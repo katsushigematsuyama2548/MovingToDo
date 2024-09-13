@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\Auth; // 追加
 use Illuminate\Support\Facades\Route;
 use App\Providers\RouteServiceProvider;
 
-
 class LoginController extends Controller
 {
     /*

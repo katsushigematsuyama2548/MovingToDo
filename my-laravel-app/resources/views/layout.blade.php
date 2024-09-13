@@ -11,7 +11,7 @@
 <body>
     <header>
         <nav class="my-navbar flex items-center justify-between bg-gray-800 h-24 mb-12 p-0 px-8">
-            <a class="my-navbar-brand text-lg text-gray-400 hover:text-white" href="{{ route('tasks.index', ['folder' => $folder->id]) }}">ToDo App</a>
+            <a class="my-navbar-brand text-lg text-gray-400 hover:text-white" href="{{ $folder ? route('tasks.index', ['folder' => $folder->id]) : route('home') }}">ToDo App</a>
             <div class="my-navbar-control">
                 @if(Auth::check())
                     <span class="my-navbar-item text-gray-400 hover:text-white">ようこそ, {{ Auth::user()->name }}さん</span>

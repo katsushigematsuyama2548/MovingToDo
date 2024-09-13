@@ -7,6 +7,7 @@ use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use App\Events\UserRegistered;
 
 class RegisterController extends Controller // ここで親クラスを拡張
 {
@@ -67,10 +68,15 @@ class RegisterController extends Controller // ここで親クラスを拡張
      */
     protected function create(array $data)
     {
-        return User::create([
+        $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
         ]);
+
+        // イベントを発火
+        event(new UserRegistered($user));
+
+        return $user;
     }
 }

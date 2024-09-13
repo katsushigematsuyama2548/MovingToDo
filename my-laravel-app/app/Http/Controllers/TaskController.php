@@ -8,26 +8,28 @@ use App\Models\Task;
 use App\Http\Requests\CreateTask;
 use App\Http\Requests\EditTask;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 
 class TaskController extends Controller
 {
-        /**
-     *  【タスク一覧ページの表示機能】
-     *
-     *  GET /folders/{id}/tasks
-     *  @param int $id
-     *  @return \Illuminate\View\View
-     */
-
-    public function index(Folder $folder)
+    public function index(Folder $folder = null)
     {
-        /** @var App\Models\User **/
         $user = auth()->user();
-        $folders = $user->folders()->get();
+        $folders = $user ? $user->folders()->get() : Folder::whereNull('user_id')->get();
+    
+        if (!$folder && $folders->isNotEmpty()) {
+            $folder = $folders->first();
+        }
+    
+        if (!$folder) {
+            return redirect()->route('home')->with('error', 'フォルダーが見つかりません');
+        }
+    
         $tasks = $folder->tasks()->get();
     
-        return view('tasks/index', [
+        return view('tasks.index', [
             'folders' => $folders,
             'folder' => $folder,
             'folder_id' => $folder->id,
@@ -38,9 +40,7 @@ class TaskController extends Controller
     public function showCreateForm(Folder $folder)
     {
         /** @var App\Models\User **/
-        $user = Auth::user();
-        $folder = $user->folders()->findOrFail($folder->id);
-    
+            
         return view('tasks/create', [
             'folder' => $folder,
             'folder_id' => $folder->id,
@@ -66,10 +66,7 @@ class TaskController extends Controller
     public function showEditForm(Folder $folder, Task $task)
     {
         /** @var App\Models\User **/
-        $user = Auth::user();
-        $folder = $user->folders()->findOrFail($folder->id);
-        $task->find($task->id);
-    
+
         return view('tasks/edit', [
             'folder' => $folder,
             'task' => $task,
@@ -96,12 +93,7 @@ class TaskController extends Controller
 
     public function showDeleteForm(Folder $folder, Task $task)
     {
-        $this->checkRelation($folder, $task);
         /** @var App\Models\User **/
-        $user = Auth::user();
-        $folder = $user->folders()->findOrFail($folder->id);
-        $task = $folder->tasks()->findOrFail($task->id);
-    
         return view('tasks/delete', [
             'folder' => $folder,
             'task' => $task,
